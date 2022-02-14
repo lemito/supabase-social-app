@@ -59,22 +59,25 @@ const update = async (data) => {
   }
 }
 
+const STORAGE_URL =
+  'https://irchxfbnfzadbdauqvyq.supabase.in/storage/v1/object/public/'
+
 const uploadAvatar = async (userId, file) => {
   const ext = file.name.split('.').at(-1)
   const name = userId + '.' + ext
   try {
-    const { data, error } = await supabase.storage
-      .from('avatars')
-      .upload(name, file, {
-        upsert: true
-      })
+    const {
+      data: { Key },
+      error
+    } = await supabase.storage.from('avatars').upload(name, file, {
+      cacheControl: '0',
+      upsert: true
+    })
     if (error) throw error
-    const { publicUrl, error: publicUrlError } = await supabase.storage
-      .from('avatars')
-      .getPublicUrl(data['Key'])
-    if (error) throw publicUrlError
-    console.log(publicUrl)
-    const user = await update({ avatar: data.key })
+    const { user, error: _error } = await supabase.auth.update({
+      data: { avatar_url: STORAGE_URL + Key }
+    })
+    if (_error) throw _error
     return serializeUser(user)
   } catch (e) {
     throw e

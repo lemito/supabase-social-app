@@ -47,7 +47,7 @@ export const UpdateUser = () => {
   }
 
   return (
-    <Layout>
+    <Layout className='page-update-user'>
       <h1>Update User</h1>
       <AvatarUploader />
       <Form fields={fields} submit={updateUser} button='Update' />

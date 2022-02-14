@@ -34,19 +34,24 @@ export const AvatarUploader = () => {
       })
   }
 
+  if (!user) return null
+
   return (
-    <form className='avatar-uploader' onSubmit={upload}>
-      <label htmlFor='avatar'>Avatar:</label>
-      <input
-        type='file'
-        accept='image/*'
-        onChange={(e) => {
-          if (e.target.files) {
-            setFile(e.target.files[0])
-          }
-        }}
-      />
-      <button disabled={disabled}>Upload</button>
-    </form>
+    <div className='avatar-uploader'>
+      {user.avatar_url && <img src={user.avatar_url} alt={user.username} />}
+      <form className='avatar-uploader' onSubmit={upload}>
+        <label htmlFor='avatar'>Avatar:</label>
+        <input
+          type='file'
+          accept='image/*'
+          onChange={(e) => {
+            if (e.target.files) {
+              setFile(e.target.files[0])
+            }
+          }}
+        />
+        <button disabled={disabled}>Upload</button>
+      </form>
+    </div>
   )
 }

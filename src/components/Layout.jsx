@@ -2,7 +2,7 @@ import { Loader } from './Loader'
 import { Error } from './Error'
 import { useStore } from 'h'
 
-export const Layout = ({ children }) => {
+export const Layout = ({ children, className }) => {
   const { loading, error } = useStore(({ loading, error }) => ({
     loading,
     error
@@ -12,5 +12,5 @@ export const Layout = ({ children }) => {
 
   if (error) return <Error error={error} />
 
-  return children
+  return <div className={className ? className : ''}>{children}</div>
 }
