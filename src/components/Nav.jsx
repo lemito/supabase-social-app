@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
-import { useStore } from 'h'
+import useStore from 'h/useStore'
 import userApi from '../api/user'
+import { Loader } from './Loader'
 
 export const Nav = () => {
-  const { user, setUser, setLoading, setError } = useStore(
-    ({ user, setUser, setLoading, setError }) => ({
+  const { user, loading, setUser, setLoading, setError } = useStore(
+    ({ user, loading, setUser, setLoading, setError }) => ({
       user,
+      loading,
       setUser,
       setLoading,
       setError
@@ -30,6 +32,9 @@ export const Nav = () => {
           <Link to='/'>Home</Link>
         </li>
         <li>
+          <Link to='/blog'>Blog</Link>
+        </li>
+        <li>
           <Link to='/about'>About</Link>
         </li>
         {!user ? (
@@ -44,7 +49,22 @@ export const Nav = () => {
         ) : (
           <>
             <li>
-              <Link to='/update-user'>Update</Link>
+              <Link to='/profile'>
+                {user.avatar_url ? (
+                  loading ? (
+                    <Loader width={20} />
+                  ) : (
+                    <img
+                      src={user.avatar_url}
+                      alt={user.username}
+                      className='avatar'
+                      title='Profile'
+                    />
+                  )
+                ) : (
+                  'Profile'
+                )}
+              </Link>
             </li>
             <li>
               <button onClick={logout}>Logout</button>

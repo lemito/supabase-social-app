@@ -1,7 +1,6 @@
-import { Layout, Form, AvatarUploader } from 'c'
-import { useStore } from 'h'
+import { Form, AvatarUploader } from 'c'
+import useStore from 'h/useStore'
 import userApi from 'a/user'
-import { useNavigate } from 'react-router-dom'
 
 const fields = [
   {
@@ -21,16 +20,14 @@ const fields = [
   }
 ]
 
-export const UpdateUser = () => {
-  const { user, setUser, setLoading, setError } = useStore(
-    ({ user, setUser, setLoading, setError }) => ({
-      user,
+export const UserUpdater = () => {
+  const { setUser, setLoading, setError } = useStore(
+    ({ setUser, setLoading, setError }) => ({
       setUser,
       setLoading,
       setError
     })
   )
-  const navigate = useNavigate()
 
   const updateUser = async (data) => {
     setLoading(true)
@@ -38,7 +35,6 @@ export const UpdateUser = () => {
       .update(data)
       .then((user) => {
         setUser(user)
-        navigate('/')
       })
       .catch(setError)
       .finally(() => {
@@ -47,10 +43,10 @@ export const UpdateUser = () => {
   }
 
   return (
-    <Layout className='page-update-user'>
-      <h1>Update User</h1>
+    <div>
+      <h2>Update User</h2>
       <AvatarUploader />
       <Form fields={fields} submit={updateUser} button='Update' />
-    </Layout>
+    </div>
   )
 }

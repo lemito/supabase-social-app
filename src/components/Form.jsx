@@ -1,4 +1,4 @@
-import { useForm } from 'h'
+import useForm from 'h/useForm'
 import { Field } from './Field'
 
 export const Form = ({ fields, submit, button }) => {

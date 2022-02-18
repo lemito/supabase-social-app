@@ -1,5 +1,5 @@
 import { Layout, Form } from 'c'
-import { useStore } from 'h'
+import useStore from 'h/useStore'
 import userApi from 'a/user'
 import { useNavigate } from 'react-router-dom'
 

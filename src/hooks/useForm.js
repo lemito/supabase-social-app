@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-export const useForm = (initialData) => {
+export default function useForm(initialData) {
   const [data, setData] = useState(initialData)
   const [disabled, setDisabled] = useState(true)
 

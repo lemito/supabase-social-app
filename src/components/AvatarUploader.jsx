@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import userApi from 'a/user'
-import { useStore } from 'h'
+import useStore from 'h/useStore'
 
 export const AvatarUploader = () => {
   const { user, setUser, setLoading, setError } = useStore(
@@ -25,7 +25,6 @@ export const AvatarUploader = () => {
     userApi
       .uploadAvatar(user.id, file)
       .then((user) => {
-        console.log(user)
         setUser(user)
       })
       .catch(setError)
@@ -38,7 +37,6 @@ export const AvatarUploader = () => {
 
   return (
     <div className='avatar-uploader'>
-      {user.avatar_url && <img src={user.avatar_url} alt={user.username} />}
       <form className='avatar-uploader' onSubmit={upload}>
         <label htmlFor='avatar'>Avatar:</label>
         <input

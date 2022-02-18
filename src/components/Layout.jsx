@@ -1,6 +1,6 @@
 import { Loader } from './Loader'
 import { Error } from './Error'
-import { useStore } from 'h'
+import useStore from 'h/useStore'
 
 export const Layout = ({ children, className }) => {
   const { loading, error } = useStore(({ loading, error }) => ({
