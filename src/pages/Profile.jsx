@@ -1,5 +1,5 @@
-import useStore from 'h/useStore'
 import { Protected, UserUpdater } from 'c'
+import useStore from 'h/useStore'
 
 export const Profile = () => {
   const user = useStore(({ user }) => user)

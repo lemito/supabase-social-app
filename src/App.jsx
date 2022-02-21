@@ -1,6 +1,6 @@
 import './styles/app.scss'
 import { Routes, Route } from 'react-router-dom'
-import { Home, About, Register, Login, Profile, Blog } from 'p'
+import { Home, About, Register, Login, Profile, Blog, Post } from 'p'
 import { Nav } from 'c'
 import { useEffect } from 'react'
 import useStore from 'h/useStore'
@@ -33,7 +33,8 @@ function App() {
       <main>
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/blog/*' element={<Blog />} />
+          <Route path='/blog' element={<Blog />} />
+          <Route path='/blog/post/:id' element={<Post />} />
           <Route path='/about' element={<About />} />
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />

@@ -1,8 +1,7 @@
-import useStore from 'h/useStore'
-import { Layout, Protected, PostTabs, PostList, Form } from 'c'
-import { useParams } from 'react-router-dom'
 import postApi from 'a/post'
-import { useNavigate } from 'react-router-dom'
+import { Form, Layout, PostList, PostTabs, Protected } from 'c'
+import useStore from 'h/useStore'
+import { useEffect, useState } from 'react'
 
 const fields = [
   {
@@ -20,44 +19,41 @@ const fields = [
 export const Blog = () => {
   const {
     user,
-    posts,
     postsByUser,
-    userByPost,
-    commentsByPost,
-    likesByPost,
+    allPostsWithCommentAndLikeCount,
     setLoading,
     setError
   } = useStore(
     ({
       user,
-      posts,
       postsByUser,
       userByPost,
       commentsByPost,
       likesByPost,
+      allPostsWithCommentAndLikeCount,
       setLoading,
       setError
     }) => ({
       user,
-      posts,
       postsByUser,
       userByPost,
       commentsByPost,
       likesByPost,
+      allPostsWithCommentAndLikeCount,
       setLoading,
       setError
     })
   )
-  const slug = useParams()['*']
-  const navigate = useNavigate()
+  const [_posts, setPosts] = useState([])
+  const [tab, setTab] = useState('all')
 
   const create = (data) => {
-    data.user_id = user.id
+    data.user_id = user?.id
     setLoading(true)
     postApi
       .create(data)
       .then(() => {
-        navigate('/blog/my-posts')
+        setTab('my')
       })
       .catch(setError)
       .finally(() => {
@@ -65,27 +61,27 @@ export const Blog = () => {
       })
   }
 
-  let _posts = []
-  switch (slug) {
-    case 'my-posts':
-      if (user) {
-        _posts = postsByUser[user.id]
-        break
-      }
-    default:
-      _posts = posts.map((post) => ({
-        ...post,
-        author: userByPost[post.id],
-        commentCount: commentsByPost[post.id]?.length,
-        likeCount: likesByPost[post.id]?.length
-      }))
-      break
+  useEffect(() => {
+    if (tab === 'new') return
+    const _posts =
+      tab === 'my' ? postsByUser[user.id] : allPostsWithCommentAndLikeCount
+    setPosts(_posts)
+  }, [tab, allPostsWithCommentAndLikeCount])
+
+  if (tab === 'new') {
+    return (
+      <Protected>
+        <PostTabs setTab={setTab} />
+        <h2>New post</h2>
+        <Form fields={fields} submit={create} button='Create' />
+      </Protected>
+    )
   }
 
   return (
     <Layout>
-      <PostTabs />
-      <h2>{slug === 'my-posts' ? 'My' : 'All'} posts</h2>
+      <PostTabs setTab={setTab} />
+      <h2>{tab === 'my' ? 'My' : 'All'} posts</h2>
       <PostList posts={_posts} />
     </Layout>
   )
