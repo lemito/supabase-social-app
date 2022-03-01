@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url'
 import { createClient } from '@supabase/supabase-js'
 import serializeUser from '../utils/serializeUser.js'
 import { config } from 'dotenv'
+
 const _dirname = dirname(fileURLToPath(import.meta.url))
 config({
   path: join(_dirname, '../../.env')
@@ -22,7 +23,7 @@ async function seedDb() {
       },
       {
         data: {
-          username: 'Alice'
+          user_name: 'Alice'
         }
       }
     )
@@ -33,7 +34,7 @@ async function seedDb() {
       },
       {
         data: {
-          username: 'Bob'
+          user_name: 'Bob'
         }
       }
     )
@@ -80,16 +81,6 @@ async function seedDb() {
           content: `This is Bob's comment on Alice's post "${post.title}"`
         }
       ])
-      await supabase.from('likes').insert([
-        {
-          user_id: alice.id,
-          post_id: post.id
-        },
-        {
-          user_id: bob.id,
-          post_id: post.id
-        }
-      ])
     }
     for (const post of bobPosts) {
       await supabase.from('comments').insert([
@@ -102,16 +93,6 @@ async function seedDb() {
           user_id: bob.id,
           post_id: post.id,
           content: `This is Bob's comment on Bob's post "${post.title}"`
-        }
-      ])
-      await supabase.from('likes').insert([
-        {
-          user_id: alice.id,
-          post_id: post.id
-        },
-        {
-          user_id: bob.id,
-          post_id: post.id
         }
       ])
     }

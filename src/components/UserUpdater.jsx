@@ -21,8 +21,9 @@ const fields = [
 ]
 
 export const UserUpdater = () => {
-  const { setUser, setLoading, setError } = useStore(
-    ({ setUser, setLoading, setError }) => ({
+  const { user, setUser, setLoading, setError } = useStore(
+    ({ user, setUser, setLoading, setError }) => ({
+      user,
       setUser,
       setLoading,
       setError
@@ -30,12 +31,11 @@ export const UserUpdater = () => {
   )
 
   const updateUser = async (data) => {
+    data.id = user.id
     setLoading(true)
     userApi
       .update(data)
-      .then((user) => {
-        setUser(user)
-      })
+      .then(setUser)
       .catch(setError)
       .finally(() => {
         setLoading(false)
@@ -43,7 +43,7 @@ export const UserUpdater = () => {
   }
 
   return (
-    <div>
+    <div className='user-updater'>
       <h2>Update User</h2>
       <AvatarUploader />
       <Form fields={fields} submit={updateUser} button='Update' />

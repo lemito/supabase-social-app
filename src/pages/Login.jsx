@@ -37,9 +37,9 @@ export const Login = () => {
   }
 
   return (
-    <Layout>
+    <div className='page login'>
       <h1>Login</h1>
       <Form fields={fields} submit={register} button='Login' />
-    </Layout>
+    </div>
   )
 }

@@ -49,6 +49,11 @@ export const Nav = () => {
         ) : (
           <>
             <li>
+              <button onClick={logout} className='danger'>
+                Logout
+              </button>
+            </li>
+            <li>
               <Link to='/profile'>
                 {user.avatar_url ? (
                   loading ? (
@@ -65,9 +70,6 @@ export const Nav = () => {
                   'Profile'
                 )}
               </Link>
-            </li>
-            <li>
-              <button onClick={logout}>Logout</button>
             </li>
           </>
         )}

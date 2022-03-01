@@ -17,33 +17,22 @@ const fields = [
 ]
 
 export const Blog = () => {
-  const {
-    user,
-    postsByUser,
-    allPostsWithCommentAndLikeCount,
-    setLoading,
-    setError
-  } = useStore(
-    ({
-      user,
-      postsByUser,
-      userByPost,
-      commentsByPost,
-      likesByPost,
-      allPostsWithCommentAndLikeCount,
-      setLoading,
-      setError
-    }) => ({
-      user,
-      postsByUser,
-      userByPost,
-      commentsByPost,
-      likesByPost,
-      allPostsWithCommentAndLikeCount,
-      setLoading,
-      setError
-    })
-  )
+  const { user, postsByUser, allPostsWithCommentCount, setLoading, setError } =
+    useStore(
+      ({
+        user,
+        postsByUser,
+        allPostsWithCommentCount,
+        setLoading,
+        setError
+      }) => ({
+        user,
+        postsByUser,
+        allPostsWithCommentCount,
+        setLoading,
+        setError
+      })
+    )
   const [_posts, setPosts] = useState([])
   const [tab, setTab] = useState('all')
 
@@ -64,14 +53,15 @@ export const Blog = () => {
   useEffect(() => {
     if (tab === 'new') return
     const _posts =
-      tab === 'my' ? postsByUser[user.id] : allPostsWithCommentAndLikeCount
+      tab === 'my' ? postsByUser[user.id] : allPostsWithCommentCount
     setPosts(_posts)
-  }, [tab, allPostsWithCommentAndLikeCount])
+  }, [tab, allPostsWithCommentCount])
 
   if (tab === 'new') {
     return (
-      <Protected>
-        <PostTabs setTab={setTab} />
+      <Protected className='page new-post'>
+        <h1>Blog</h1>
+        <PostTabs tab={tab} setTab={setTab} />
         <h2>New post</h2>
         <Form fields={fields} submit={create} button='Create' />
       </Protected>
@@ -79,10 +69,11 @@ export const Blog = () => {
   }
 
   return (
-    <Layout>
-      <PostTabs setTab={setTab} />
+    <div className='page blog'>
+      <h1>Blog</h1>
+      <PostTabs tab={tab} setTab={setTab} />
       <h2>{tab === 'my' ? 'My' : 'All'} posts</h2>
       <PostList posts={_posts} />
-    </Layout>
+    </div>
   )
 }

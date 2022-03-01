@@ -1,15 +1,27 @@
 import supabase from 's'
 import serializeUser from 'u/serializeUser'
 
-const get = () => {
-  const user = serializeUser(supabase.auth.user())
+const get = async () => {
+  const user = supabase.auth.user()
   console.log(user)
-  if (user) return user
+  if (user) {
+    try {
+      const { data: _user, error } = await supabase
+        .from('users')
+        .select()
+        .match({ id: user.id })
+        .single()
+      if (error) throw error
+      return _user
+    } catch (e) {
+      throw e
+    }
+  }
   return null
 }
 
 const register = async (data) => {
-  const { email, password, username } = data
+  const { email, password, user_name } = data
   try {
     const { user, error } = await supabase.auth.signUp(
       {
@@ -18,7 +30,7 @@ const register = async (data) => {
       },
       {
         data: {
-          username
+          user_name
         }
       }
     )
@@ -38,7 +50,13 @@ const login = async (data) => {
   try {
     const { user, error } = await supabase.auth.signIn(data)
     if (error) throw error
-    return serializeUser(user)
+    const { data: _user, error: _error } = await supabase
+      .from('users')
+      .select()
+      .match({ id: user.id })
+      .single()
+    if (_error) throw _error
+    return _user
   } catch (e) {
     throw e
   }
@@ -56,14 +74,13 @@ const logout = async () => {
 
 const update = async (data) => {
   try {
-    const { user, error } = await supabase.auth.update({ data })
-    if (error) throw error
-    const { _, error: _error } = await supabase
+    const { data: user, error } = await supabase
       .from('users')
       .update(data)
-      .match({ id: user.id })
-    if (_error) throw _error
-    return serializeUser(user)
+      .match({ id: data.id })
+      .single()
+    if (error) throw error
+    return user
   } catch (e) {
     throw e
   }
@@ -85,16 +102,13 @@ const uploadAvatar = async (userId, file) => {
     })
     if (error) throw error
     const avatar_url = STORAGE_URL + Key
-    const { user, error: _error } = await supabase.auth.update({
-      data: { avatar_url }
-    })
-    if (_error) throw _error
-    const { _, error: __error } = await supabase
+    const { data: _user, error: _error } = await supabase
       .from('users')
       .update({ avatar_url })
-      .match({ id: user.id })
-    if (__error) throw __error
-    return serializeUser(user)
+      .match({ id: userId })
+      .single()
+    if (_error) throw _error
+    return _user
   } catch (e) {
     throw e
   }

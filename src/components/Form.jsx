@@ -3,7 +3,7 @@ import { Field } from './Field'
 
 export const Form = ({ fields, submit, button }) => {
   const initialData = fields.reduce((o, f) => {
-    o[f.id] = ''
+    o[f.id] = f.value || ''
     return o
   }, {})
   const { data, change, disabled } = useForm(initialData)
@@ -19,7 +19,9 @@ export const Form = ({ fields, submit, button }) => {
       {fields.map((f, i) => (
         <Field {...f} value={data[f.id]} change={change} key={i} />
       ))}
-      <button disabled={disabled}>{button}</button>
+      <button disabled={disabled} className='success'>
+        {button}
+      </button>
     </form>
   )
 }

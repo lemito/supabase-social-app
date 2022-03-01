@@ -1,25 +1,50 @@
-import { Link } from 'react-router-dom'
 import useStore from 'h/useStore'
 
-export const PostTabs = ({ setTab }) => {
+const tabs = [
+  {
+    name: 'All'
+  },
+  {
+    name: 'My',
+    protected: true
+  },
+  {
+    name: 'New',
+    protected: true
+  }
+]
+
+export const PostTabs = ({ tab, setTab }) => {
   const user = useStore(({ user }) => user)
 
   return (
     <nav className='post-tabs'>
       <ul>
-        <li>
-          <button onClick={() => setTab('all')}>All</button>
-        </li>
-        {user && (
-          <>
-            <li>
-              <button onClick={() => setTab('my')}>My</button>
+        {tabs.map((t) => {
+          const tabId = t.name.toLowerCase()
+          if (t.protected) {
+            return user ? (
+              <li key={t.name}>
+                <button
+                  className={tab === tabId ? 'active' : ''}
+                  onClick={() => setTab(tabId)}
+                >
+                  {t.name}
+                </button>
+              </li>
+            ) : null
+          }
+          return (
+            <li key={t.name}>
+              <button
+                className={tab === tabId ? 'active' : ''}
+                onClick={() => setTab(tabId)}
+              >
+                {t.name}
+              </button>
             </li>
-            <li>
-              <button onClick={() => setTab('new')}>New</button>
-            </li>
-          </>
-        )}
+          )
+        })}
       </ul>
     </nav>
   )

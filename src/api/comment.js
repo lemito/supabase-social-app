@@ -1,10 +1,10 @@
 import supabase from 's'
 
-const create = async (postData) => {
+const create = async (commentData) => {
   try {
     const { data, error } = await supabase
-      .from('posts')
-      .insert([postData])
+      .from('comments')
+      .insert([commentData])
       .single()
     if (error) throw error
     return data
@@ -13,11 +13,11 @@ const create = async (postData) => {
   }
 }
 
-const update = async ({ id, data: postData }) => {
+const update = async ({ id, data: commentData }) => {
   try {
     const { data, error } = await supabase
-      .from('posts')
-      .update({ ...postData })
+      .from('comments')
+      .update({ ...commentData })
       .match({ id })
     if (error) throw error
     return data
@@ -28,12 +28,12 @@ const update = async ({ id, data: postData }) => {
 
 const remove = async (id) => {
   try {
-    const { error } = await supabase.from('posts').delete().match({ id })
+    const { error } = await supabase.from('comments').delete().match({ id })
     if (error) throw error
   } catch (e) {
     throw e
   }
 }
 
-const postApi = { create, update, remove }
-export default postApi
+const commentApi = { create, update, remove }
+export default commentApi

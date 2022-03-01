@@ -3,9 +3,9 @@ import useStore from 'h/useStore'
 
 export const Profile = () => {
   const user = useStore(({ user }) => user)
-
+  delete user.avatar_url
   return (
-    <Protected>
+    <Protected className='page profile'>
       <h1>Profile</h1>
       <div className='user-data'>
         <pre>{JSON.stringify(user, null, 2)}</pre>

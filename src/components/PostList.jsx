@@ -1,11 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom'
 import useStore from 'h/useStore'
+import { VscComment, VscEdit, VscTrash } from 'react-icons/vsc'
 
 const PostItem = ({ post }) => {
-  const { removePost, setEdit } = useStore(({ removePost, setEdit }) => ({
-    removePost,
-    setEdit
-  }))
+  const { removePost, setEditPost } = useStore(
+    ({ removePost, setEditPost }) => ({
+      removePost,
+      setEditPost
+    })
+  )
   const navigate = useNavigate()
 
   return (
@@ -18,30 +21,38 @@ const PostItem = ({ post }) => {
         }
       }}
     >
-      <h4>{post.title}</h4>
+      <h3>{post.title}</h3>
       {post.editable && (
         <div>
           <button
             onClick={() => {
-              setEdit(true)
-              navigate(`/post/${post.id}`)
+              setEditPost(true)
+              navigate(`/blog/post/${post.id}`)
             }}
+            className='info'
           >
-            Edit
+            <VscEdit />
           </button>
           <button
             onClick={() => {
               removePost(post.id)
             }}
+            className='danger'
           >
-            Remove
+            <VscTrash />
           </button>
         </div>
       )}
       <p>Author: {post.author}</p>
-      <p>{post.created_at}</p>
-      <p>{post.commentCount}</p>
-      <p>{post.likeCount}</p>
+      <p className='date'>{new Date(post.created_at).toLocaleString()}</p>
+      {post.commentCount > 0 && (
+        <p>
+          <VscComment />
+          <span className='badge'>
+            <sup>{post.commentCount}</sup>
+          </span>
+        </p>
+      )}
     </Link>
   )
 }
@@ -51,7 +62,7 @@ export const PostList = ({ posts }) => (
     {posts.length ? (
       posts.map((post) => <PostItem key={post.id} post={post} />)
     ) : (
-      <h4>No posts</h4>
+      <h3>No posts</h3>
     )}
   </div>
 )

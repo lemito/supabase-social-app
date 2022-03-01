@@ -1,14 +1,11 @@
 import postApi from 'a/post'
-import { Form, Layout, Loader, Protected } from 'c'
+import commentApi from 'a/comment'
+import { Form, Protected, CommentList } from 'c'
 import useStore from 'h/useStore'
 import { useNavigate, useParams } from 'react-router-dom'
+import { VscEdit, VscTrash } from 'react-icons/vsc'
 
-const fields = [
-  {
-    id: 'title',
-    label: 'Title',
-    type: 'text'
-  },
+const createCommentFields = [
   {
     id: 'content',
     label: 'Content',
@@ -19,86 +16,119 @@ const fields = [
 export const Post = () => {
   const { id } = useParams()
   const {
-    loading,
+    user,
     setLoading,
     setError,
     postsById,
     removePost,
-    edit,
-    setEdit
+    editPost,
+    setEditPost
   } = useStore(
     ({
-      loading,
+      user,
       setLoading,
       setError,
       postsById,
       removePost,
-      edit,
-      setEdit
+      editPost,
+      setEditPost
     }) => ({
-      loading,
+      user,
       setLoading,
       setError,
       postsById,
       removePost,
-      edit,
-      setEdit
+      editPost,
+      setEditPost
     })
   )
   const post = postsById[id]
   const navigate = useNavigate()
 
-  if (loading) return <Loader />
-
-  const update = (data) => {
+  const updatePost = (data) => {
     setLoading(true)
     postApi
-      .update(data, post.id)
+      .update({ id: post.id, data })
       .then(() => {
-        setEdit(false)
+        setEditPost(false)
       })
       .catch(setError)
-      .finally(() => {
-        setLoading(false)
-      })
   }
 
-  if (edit) {
+  const createComment = (data) => {
+    data.user_id = user?.id
+    data.post_id = post.id
+    setLoading(true)
+    commentApi.create(data).catch(setError)
+  }
+
+  if (editPost) {
+    const editPostFields = [
+      {
+        id: 'title',
+        label: 'Title',
+        type: 'text',
+        value: post.title
+      },
+      {
+        id: 'content',
+        label: 'Content',
+        type: 'text',
+        value: post.content
+      }
+    ]
     return (
       <Protected>
         <h2>Update post</h2>
-        <Form fields={fields} submit={update} button='Update' />
+        <Form fields={editPostFields} submit={updatePost} button='Update' />
       </Protected>
     )
   }
 
   return (
-    <Layout className='post'>
-      <h4>{post.title}</h4>
-      {post.editable ? (
-        <div>
-          <button
-            onClick={() => {
-              setEdit(true)
-            }}
-          >
-            Edit
-          </button>
-          <button
-            onClick={() => {
-              removePost(post.id)
-              navigate('/blog')
-            }}
-          >
-            Remove
-          </button>
+    <div className='page post'>
+      <h1>Post</h1>
+      {post && (
+        <div className='post-item' style={{ width: '512px' }}>
+          <h2>{post.title}</h2>
+          {post.editable ? (
+            <div>
+              <button
+                onClick={() => {
+                  setEditPost(true)
+                }}
+                className='info'
+              >
+                <VscEdit />
+              </button>
+              <button
+                onClick={() => {
+                  removePost(post.id)
+                  navigate('/blog')
+                }}
+                className='danger'
+              >
+                <VscTrash />
+              </button>
+            </div>
+          ) : (
+            <p>Author: {post.author}</p>
+          )}
+          <p className='date'>{new Date(post.created_at).toLocaleString()}</p>
+          <p>{post.content}</p>
+          {user && (
+            <div className='new-comment'>
+              <h3>New comment</h3>
+              <Form
+                fields={createCommentFields}
+                submit={createComment}
+                button='Create'
+              />
+            </div>
+          )}
+          {post.comments.length > 0 && <CommentList comments={post.comments} />}
         </div>
-      ) : (
-        <p>Author: {post.author.username}</p>
       )}
-      <p>{post.created_at}</p>
-      <p>{post.content}</p>
-      <p>Likes: {post.likeCount}</p>
-    </Layout>
+    </div>
   )
 }

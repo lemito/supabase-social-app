@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 const fields = [
   {
-    id: 'username',
+    id: 'user_name',
     label: 'Username',
     type: 'text'
   },
@@ -20,7 +20,7 @@ const fields = [
     type: 'password'
   },
   {
-    id: 'confirmPassword',
+    id: 'confirm_password',
     label: 'Confirm password',
     type: 'password'
   }
@@ -47,9 +47,9 @@ export const Register = () => {
   }
 
   return (
-    <Layout>
+    <div className='page register'>
       <h1>Register</h1>
       <Form fields={fields} submit={register} button='Register' />
-    </Layout>
+    </div>
   )
 }
