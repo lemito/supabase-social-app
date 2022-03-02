@@ -7,6 +7,10 @@ const useStore = create((set, get) => ({
   error: null,
   user: null,
 
+  setLoading: (loading) => set({ loading }),
+  setError: (error) => set({ error }),
+  setUser: (user) => set({ user }),
+
   users: [],
   posts: [],
   comments: [],
@@ -14,12 +18,8 @@ const useStore = create((set, get) => ({
   postsById: {},
   postsByUser: {},
   userByPost: {},
-  commentsByPost: [],
+  commentsByPost: {},
   allPostsWithCommentCount: [],
-
-  setLoading: (loading) => set({ loading }),
-  setError: (error) => set({ error }),
-  setUser: (user) => set({ user }),
 
   getCommentsByPost() {
     const { users, posts, comments } = get()
@@ -34,6 +34,14 @@ const useStore = create((set, get) => ({
     }, {})
     set({ commentsByPost })
   },
+  getUserByPost() {
+    const { users, posts } = get()
+    const userByPost = posts.reduce((obj, post) => {
+      obj[post.id] = users.find((user) => user.id === post.user_id).user_name
+      return obj
+    }, {})
+    set({ userByPost })
+  },
   getPostsByUser() {
     const { users, posts, commentsByPost } = get()
     const postsByUser = users.reduce((obj, user) => {
@@ -47,24 +55,6 @@ const useStore = create((set, get) => ({
       return obj
     }, {})
     set({ postsByUser })
-  },
-  getUserByPost() {
-    const { users, posts } = get()
-    const userByPost = posts.reduce((obj, post) => {
-      obj[post.id] = users.find((user) => user.id === post.user_id).user_name
-      return obj
-    }, {})
-    set({ userByPost })
-  },
-  getAllPostsWithCommentCount() {
-    const { posts, user, userByPost, commentsByPost } = get()
-    const allPostsWithCommentCount = posts.map((post) => ({
-      ...post,
-      editable: user?.id === post.user_id,
-      author: userByPost[post.id],
-      commentCount: commentsByPost[post.id].length
-    }))
-    set({ allPostsWithCommentCount })
   },
   getPostsById() {
     const { posts, user, userByPost, commentsByPost } = get()
@@ -83,15 +73,26 @@ const useStore = create((set, get) => ({
     }, {})
     set({ postsById })
   },
+  getAllPostsWithCommentCount() {
+    const { posts, user, userByPost, commentsByPost } = get()
+    const allPostsWithCommentCount = posts.map((post) => ({
+      ...post,
+      editable: user?.id === post.user_id,
+      author: userByPost[post.id],
+      commentCount: commentsByPost[post.id].length
+    }))
+    set({ allPostsWithCommentCount })
+  },
 
   async fetchAllData() {
     set({ loading: true })
+
     const {
       getCommentsByPost,
       getPostsByUser,
       getUserByPost,
-      getAllPostsWithCommentCount,
-      getPostsById
+      getPostsById,
+      getAllPostsWithCommentCount
     } = get()
 
     const { users, posts, comments } = await dbApi.fetchAllData()
@@ -101,24 +102,15 @@ const useStore = create((set, get) => ({
     getCommentsByPost()
     getPostsByUser()
     getUserByPost()
-    getAllPostsWithCommentCount()
     getPostsById()
+    getAllPostsWithCommentCount()
 
     set({ loading: false })
   },
 
-  editPost: false,
-  setEditPost(editPost) {
-    set({ editPost })
-  },
   removePost(id) {
     set({ loading: true })
-    postApi
-      .remove(id)
-      .catch((error) => set({ error }))
-      .finally(() => {
-        set({ loading: false })
-      })
+    postApi.remove(id).catch((error) => set({ error }))
   }
 }))
 

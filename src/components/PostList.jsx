@@ -3,12 +3,7 @@ import useStore from 'h/useStore'
 import { VscComment, VscEdit, VscTrash } from 'react-icons/vsc'
 
 const PostItem = ({ post }) => {
-  const { removePost, setEditPost } = useStore(
-    ({ removePost, setEditPost }) => ({
-      removePost,
-      setEditPost
-    })
-  )
+  const removePost = useStore(({ removePost }) => removePost)
   const navigate = useNavigate()
 
   return (
@@ -16,7 +11,7 @@ const PostItem = ({ post }) => {
       to={`/blog/post/${post.id}`}
       className='post-item'
       onClick={(e) => {
-        if (e.target.localName === 'button') {
+        if (e.target.localName === 'button' || e.target.localName === 'svg') {
           e.preventDefault()
         }
       }}
@@ -26,8 +21,7 @@ const PostItem = ({ post }) => {
         <div>
           <button
             onClick={() => {
-              setEditPost(true)
-              navigate(`/blog/post/${post.id}`)
+              navigate(`/blog/post/${post.id}?edit=true`)
             }}
             className='info'
           >

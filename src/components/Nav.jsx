@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import useStore from 'h/useStore'
 import userApi from '../api/user'
 import { Loader } from './Loader'
@@ -13,16 +13,17 @@ export const Nav = () => {
       setError
     })
   )
+  const navigate = useNavigate()
 
   const logout = () => {
     setLoading(true)
     userApi
       .logout()
-      .then(setUser)
-      .catch(setError)
-      .finally(() => {
-        setLoading(false)
+      .then((user) => {
+        setUser(user)
+        navigate('/')
       })
+      .catch(setError)
   }
 
   return (

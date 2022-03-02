@@ -15,10 +15,12 @@ const create = async (postData) => {
 
 const update = async ({ id, data: postData }) => {
   try {
+    const user = supabase.auth.user()
+    if (!user) return
     const { data, error } = await supabase
       .from('posts')
       .update({ ...postData })
-      .match({ id })
+      .match({ id, user_id: user.id })
     if (error) throw error
     return data
   } catch (e) {
@@ -28,7 +30,12 @@ const update = async ({ id, data: postData }) => {
 
 const remove = async (id) => {
   try {
-    const { error } = await supabase.from('posts').delete().match({ id })
+    const user = supabase.auth.user()
+    if (!user) return
+    const { error } = await supabase
+      .from('posts')
+      .delete()
+      .match({ id, user_id: user.id })
     if (error) throw error
   } catch (e) {
     throw e

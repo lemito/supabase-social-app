@@ -3,12 +3,14 @@ import useStore from 'h/useStore'
 
 export const Profile = () => {
   const user = useStore(({ user }) => user)
-  delete user.avatar_url
+  const userCopy = { ...user }
+  delete userCopy.avatar_url
+
   return (
     <Protected className='page profile'>
       <h1>Profile</h1>
       <div className='user-data'>
-        <pre>{JSON.stringify(user, null, 2)}</pre>
+        <pre>{JSON.stringify(userCopy, null, 2)}</pre>
       </div>
       <UserUpdater />
     </Protected>

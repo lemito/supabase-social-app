@@ -2,7 +2,7 @@ import postApi from 'a/post'
 import commentApi from 'a/comment'
 import { Form, Protected, CommentList } from 'c'
 import useStore from 'h/useStore'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { VscEdit, VscTrash } from 'react-icons/vsc'
 
 const createCommentFields = [
@@ -14,34 +14,18 @@ const createCommentFields = [
 ]
 
 export const Post = () => {
-  const { id } = useParams()
-  const {
-    user,
-    setLoading,
-    setError,
-    postsById,
-    removePost,
-    editPost,
-    setEditPost
-  } = useStore(
-    ({
+  const { user, setLoading, setError, postsById, removePost } = useStore(
+    ({ user, setLoading, setError, postsById, removePost }) => ({
       user,
       setLoading,
       setError,
       postsById,
-      removePost,
-      editPost,
-      setEditPost
-    }) => ({
-      user,
-      setLoading,
-      setError,
-      postsById,
-      removePost,
-      editPost,
-      setEditPost
+      removePost
     })
   )
+  const { id } = useParams()
+  const { search } = useLocation()
+  const edit = new URLSearchParams(search).get('edit')
   const post = postsById[id]
   const navigate = useNavigate()
 
@@ -50,7 +34,7 @@ export const Post = () => {
     postApi
       .update({ id: post.id, data })
       .then(() => {
-        setEditPost(false)
+        navigate(`/blog/post/${post.id}`)
       })
       .catch(setError)
   }
@@ -62,7 +46,7 @@ export const Post = () => {
     commentApi.create(data).catch(setError)
   }
 
-  if (editPost) {
+  if (edit) {
     const editPostFields = [
       {
         id: 'title',
@@ -77,6 +61,7 @@ export const Post = () => {
         value: post.content
       }
     ]
+
     return (
       <Protected>
         <h2>Update post</h2>
@@ -95,7 +80,7 @@ export const Post = () => {
             <div>
               <button
                 onClick={() => {
-                  setEditPost(true)
+                  navigate(`/blog/post/${post.id}?edit=true`)
                 }}
                 className='info'
               >

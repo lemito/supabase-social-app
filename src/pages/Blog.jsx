@@ -45,9 +45,6 @@ export const Blog = () => {
         setTab('my')
       })
       .catch(setError)
-      .finally(() => {
-        setLoading(false)
-      })
   }
 
   useEffect(() => {

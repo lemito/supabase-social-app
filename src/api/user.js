@@ -3,7 +3,6 @@ import serializeUser from 'u/serializeUser'
 
 const get = async () => {
   const user = supabase.auth.user()
-  console.log(user)
   if (user) {
     try {
       const { data: _user, error } = await supabase
@@ -12,6 +11,7 @@ const get = async () => {
         .match({ id: user.id })
         .single()
       if (error) throw error
+      console.log(_user)
       return _user
     } catch (e) {
       throw e
@@ -89,9 +89,9 @@ const update = async (data) => {
 const STORAGE_URL =
   'https://irchxfbnfzadbdauqvyq.supabase.in/storage/v1/object/public/'
 
-const uploadAvatar = async (userId, file) => {
+const uploadAvatar = async (id, file) => {
   const ext = file.name.split('.').at(-1)
-  const name = userId + '.' + ext
+  const name = id + '.' + ext
   try {
     const {
       data: { Key },
@@ -105,7 +105,7 @@ const uploadAvatar = async (userId, file) => {
     const { data: _user, error: _error } = await supabase
       .from('users')
       .update({ avatar_url })
-      .match({ id: userId })
+      .match({ id })
       .single()
     if (_error) throw _error
     return _user

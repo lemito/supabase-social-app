@@ -12,18 +12,12 @@ export const CommentList = ({ comments }) => {
 
   const remove = (id) => {
     setLoading(true)
-    commentApi
-      .remove(id)
-      .catch(setError)
-      .finally(() => setLoading(false))
+    commentApi.remove(id).catch(setError)
   }
 
   const update = (data) => {
     setLoading(true)
-    commentApi
-      .update({ id: editComment.id, data })
-      .catch(setError)
-      .finally(() => setLoading(false))
+    commentApi.update({ id: editComment.id, data }).catch(setError)
   }
 
   if (editComment) {

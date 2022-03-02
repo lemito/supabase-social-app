@@ -1,6 +1,6 @@
 import { Oval } from 'react-loader-spinner'
 
-export const Loader = ({ width = 60 }) => (
+export const Loader = ({ width = 50 }) => (
   <div className='loader'>
     <Oval
       width={width}
