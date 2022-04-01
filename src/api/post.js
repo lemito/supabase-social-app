@@ -13,16 +13,16 @@ const create = async (postData) => {
   }
 }
 
-const update = async ({ id, data: postData }) => {
+const update = async (data) => {
   try {
     const user = supabase.auth.user()
     if (!user) return
-    const { data, error } = await supabase
+    const { data: _data, error } = await supabase
       .from('posts')
       .update({ ...postData })
-      .match({ id, user_id: user.id })
+      .match({ id: data.id, user_id: user.id })
     if (error) throw error
-    return data
+    return _data
   } catch (e) {
     throw e
   }
@@ -43,4 +43,5 @@ const remove = async (id) => {
 }
 
 const postApi = { create, update, remove }
+
 export default postApi

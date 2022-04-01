@@ -10,11 +10,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(_dirname, './src'),
-      c: resolve(_dirname, './src/components'),
-      p: resolve(_dirname, './src/pages'),
-      h: resolve(_dirname, './src/hooks'),
-      s: resolve(_dirname, './src/supabase'),
       a: resolve(_dirname, './src/api'),
+      c: resolve(_dirname, './src/components'),
+      h: resolve(_dirname, './src/hooks'),
+      p: resolve(_dirname, './src/pages'),
+      s: resolve(_dirname, './src/supabase'),
       u: resolve(_dirname, './src/utils')
     }
   }

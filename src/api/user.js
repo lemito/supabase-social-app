@@ -5,14 +5,14 @@ const get = async () => {
   const user = supabase.auth.user()
   if (user) {
     try {
-      const { data: _user, error } = await supabase
+      const { data, error } = await supabase
         .from('users')
         .select()
         .match({ id: user.id })
         .single()
       if (error) throw error
-      console.log(_user)
-      return _user
+      console.log(data)
+      return data
     } catch (e) {
       throw e
     }
@@ -87,7 +87,7 @@ const update = async (data) => {
 }
 
 const STORAGE_URL =
-  'https://irchxfbnfzadbdauqvyq.supabase.in/storage/v1/object/public/'
+  `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/`
 
 const uploadAvatar = async (id, file) => {
   const ext = file.name.split('.').at(-1)

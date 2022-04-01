@@ -31,8 +31,9 @@ export const Post = () => {
 
   const updatePost = (data) => {
     setLoading(true)
+    data.id = post.id
     postApi
-      .update({ id: post.id, data })
+      .update(data)
       .then(() => {
         navigate(`/blog/post/${post.id}`)
       })
