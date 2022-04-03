@@ -53,7 +53,7 @@ const PostItem = ({ post }) => {
 
 export const PostList = ({ posts }) => (
   <div className='post-list'>
-    {posts.length ? (
+    {posts.length > 0 ? (
       posts.map((post) => <PostItem key={post.id} post={post} />)
     ) : (
       <h3>No posts</h3>

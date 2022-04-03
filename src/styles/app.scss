@@ -223,7 +223,7 @@ form {
   .comment-item {
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    gap: 0.25rem;
     border-bottom: 1px dashed $dark;
     padding-bottom: 0.5rem;
 
@@ -244,4 +244,24 @@ form {
 
 .avatar-uploader {
   margin-bottom: 1rem;
+}
+
+.error {
+  padding: 1rem;
+  background: $light;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+
+  h2 {
+    color: $danger;
+  }
+
+  p {
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+  }
+
+  button {
+    margin-top: 0.5rem;
+  }
 }

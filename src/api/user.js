@@ -73,6 +73,8 @@ const logout = async () => {
 }
 
 const update = async (data) => {
+  const user = supabase.auth.user()
+  if (!user) return
   try {
     const { data: user, error } = await supabase
       .from('users')
@@ -86,10 +88,14 @@ const update = async (data) => {
   }
 }
 
-const STORAGE_URL =
-  `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/`
+const STORAGE_URL = `${
+  import.meta.env.VITE_SUPABASE_URL
+}/storage/v1/object/public/`
 
-const uploadAvatar = async (id, file) => {
+const uploadAvatar = async (file) => {
+  const user = supabase.auth.user()
+  if (!user) return
+  const { id } = user
   const ext = file.name.split('.').at(-1)
   const name = id + '.' + ext
   try {

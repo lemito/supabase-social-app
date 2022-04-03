@@ -12,5 +12,7 @@ export const Protected = ({ children, className }) => {
     }
   }, [user, loading])
 
+  if (!user) return null
+
   return <div className={className ? className : ''}>{children}</div>
 }

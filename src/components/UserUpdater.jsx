@@ -13,15 +13,8 @@ export const UserUpdater = () => {
   )
 
   const updateUser = async (data) => {
-    data.id = user.id
     setLoading(true)
-    userApi
-      .update(data)
-      .then(setUser)
-      .catch(setError)
-      .finally(() => {
-        setLoading(false)
-      })
+    userApi.update(data).then(setUser).catch(setError)
   }
 
   const fields = [

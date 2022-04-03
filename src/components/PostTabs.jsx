@@ -24,7 +24,7 @@ export const PostTabs = ({ tab, setTab }) => {
           const tabId = t.name.toLowerCase()
           if (t.protected) {
             return user ? (
-              <li key={t.name}>
+              <li key={tabId}>
                 <button
                   className={tab === tabId ? 'active' : ''}
                   onClick={() => setTab(tabId)}
@@ -35,7 +35,7 @@ export const PostTabs = ({ tab, setTab }) => {
             ) : null
           }
           return (
-            <li key={t.name}>
+            <li key={tabId}>
               <button
                 className={tab === tabId ? 'active' : ''}
                 onClick={() => setTab(tabId)}

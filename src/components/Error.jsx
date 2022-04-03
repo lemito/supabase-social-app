@@ -10,6 +10,9 @@ export const Error = ({ error }) => {
       <p>Status: {status}</p>
       <p>Message: {message}</p>
       <p>Location: {location}</p>
+      <button onClick={() => {
+        window.location.reload()
+      }}>Reload</button>
     </div>
   )
 }

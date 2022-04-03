@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import useStore from 'h/useStore'
 import commentApi from 'a/comment'
-import { Form } from 'c'
+import { Form, Protected } from 'c'
 import { VscEdit, VscTrash } from 'react-icons/vsc'
 
 export const CommentList = ({ comments }) => {
@@ -17,7 +17,8 @@ export const CommentList = ({ comments }) => {
 
   const update = (data) => {
     setLoading(true)
-    commentApi.update({ id: editComment.id, data }).catch(setError)
+    data.id = editComment.id
+    commentApi.update(data).catch(setError)
   }
 
   if (editComment) {
@@ -29,11 +30,12 @@ export const CommentList = ({ comments }) => {
         value: editComment.content
       }
     ]
+
     return (
-      <div>
+      <Protected>
         <h3>Update comment</h3>
         <Form fields={fields} submit={update} button='Update' />
-      </div>
+      </Protected>
     )
   }
 

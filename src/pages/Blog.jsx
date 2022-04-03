@@ -1,5 +1,5 @@
 import postApi from 'a/post'
-import { Form, Layout, PostList, PostTabs, Protected } from 'c'
+import { Form, PostList, PostTabs, Protected } from 'c'
 import useStore from 'h/useStore'
 import { useEffect, useState } from 'react'
 
@@ -17,18 +17,18 @@ const fields = [
 ]
 
 export const Blog = () => {
-  const { user, postsByUser, allPostsWithCommentCount, setLoading, setError } =
+  const { user, allPostsWithCommentCount, postsByUser, setLoading, setError } =
     useStore(
       ({
         user,
-        postsByUser,
         allPostsWithCommentCount,
+        postsByUser,
         setLoading,
         setError
       }) => ({
         user,
-        postsByUser,
         allPostsWithCommentCount,
+        postsByUser,
         setLoading,
         setError
       })
@@ -37,7 +37,6 @@ export const Blog = () => {
   const [tab, setTab] = useState('all')
 
   const create = (data) => {
-    data.user_id = user?.id
     setLoading(true)
     postApi
       .create(data)

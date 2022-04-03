@@ -1,5 +1,5 @@
 import userApi from 'a/user'
-import { Form, Layout } from 'c'
+import { Form } from 'c'
 import useStore from 'h/useStore'
 import { useNavigate } from 'react-router-dom'
 
@@ -41,9 +41,6 @@ export const Register = () => {
         navigate('/')
       })
       .catch(setError)
-      .finally(() => {
-        setLoading(false)
-      })
   }
 
   return (

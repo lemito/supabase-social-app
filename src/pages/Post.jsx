@@ -41,9 +41,8 @@ export const Post = () => {
   }
 
   const createComment = (data) => {
-    data.user_id = user?.id
-    data.post_id = post.id
     setLoading(true)
+    data.post_id = post.id
     commentApi.create(data).catch(setError)
   }
 

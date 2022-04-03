@@ -3,9 +3,8 @@ import userApi from 'a/user'
 import useStore from 'h/useStore'
 
 export const AvatarUploader = () => {
-  const { user, setUser, setLoading, setError } = useStore(
-    ({ user, setUser, setLoading, setError }) => ({
-      user,
+  const { setUser, setLoading, setError } = useStore(
+    ({ setUser, setLoading, setError }) => ({
       setUser,
       setLoading,
       setError
@@ -22,18 +21,8 @@ export const AvatarUploader = () => {
     e.preventDefault()
     if (disabled) return
     setLoading(true)
-    userApi
-      .uploadAvatar(user.id, file)
-      .then((user) => {
-        setUser(user)
-      })
-      .catch(setError)
-      .finally(() => {
-        setLoading(false)
-      })
+    userApi.uploadAvatar(file).then(setUser).catch(setError)
   }
-
-  if (!user) return null
 
   return (
     <div className='avatar-uploader'>

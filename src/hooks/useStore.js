@@ -4,11 +4,10 @@ import postApi from 'a/post'
 
 const useStore = create((set, get) => ({
   loading: true,
-  error: null,
-  user: null,
-
   setLoading: (loading) => set({ loading }),
-  setError: (error) => set({ error }),
+  error: null,
+  setError: (error) => set({ loading: false, error }),
+  user: null,
   setUser: (user) => set({ user }),
 
   users: [],
@@ -62,7 +61,7 @@ const useStore = create((set, get) => ({
       obj[post.id] = {
         ...post,
         comments: commentsByPost[post.id],
-        commentCount: commentsByPost[post.id]
+        commentCount: commentsByPost[post.id].length
       }
       if (post.user_id === user?.id) {
         obj[post.id].editable = true
@@ -100,8 +99,8 @@ const useStore = create((set, get) => ({
     set({ users, posts, comments })
 
     getCommentsByPost()
-    getPostsByUser()
     getUserByPost()
+    getPostsByUser()
     getPostsById()
     getAllPostsWithCommentCount()
 

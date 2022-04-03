@@ -1,10 +1,12 @@
 import supabase from 's'
 
 const create = async (postData) => {
+  const user = supabase.auth.user()
+  if (!user) return
   try {
     const { data, error } = await supabase
       .from('posts')
-      .insert([postData])
+      .insert([{ ...postData, user_id: user.id }])
       .single()
     if (error) throw error
     return data
@@ -14,9 +16,9 @@ const create = async (postData) => {
 }
 
 const update = async (data) => {
+  const user = supabase.auth.user()
+  if (!user) return
   try {
-    const user = supabase.auth.user()
-    if (!user) return
     const { data: _data, error } = await supabase
       .from('posts')
       .update({ ...postData })
@@ -29,9 +31,9 @@ const update = async (data) => {
 }
 
 const remove = async (id) => {
+  const user = supabase.auth.user()
+  if (!user) return
   try {
-    const user = supabase.auth.user()
-    if (!user) return
     const { error } = await supabase
       .from('posts')
       .delete()

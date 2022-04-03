@@ -1,10 +1,12 @@
 import supabase from 's'
 
 const create = async (commentData) => {
+  const user = supabase.auth.user()
+  if (!user) return
   try {
     const { data, error } = await supabase
       .from('comments')
-      .insert([commentData])
+      .insert([{ ...commentData, user_id: user.id }])
       .single()
     if (error) throw error
     return data
@@ -13,14 +15,14 @@ const create = async (commentData) => {
   }
 }
 
-const update = async ({ id, data: commentData }) => {
+const update = async (commentData) => {
+  const user = supabase.auth.user()
+  if (!user) return
   try {
-    const user = supabase.auth.user()
-    if (!user) return
     const { data, error } = await supabase
       .from('comments')
       .update({ ...commentData })
-      .match({ id, user_id: user.id })
+      .match({ id: commentData.id, user_id: user.id })
     if (error) throw error
     return data
   } catch (e) {
@@ -43,4 +45,5 @@ const remove = async (id) => {
 }
 
 const commentApi = { create, update, remove }
+
 export default commentApi
