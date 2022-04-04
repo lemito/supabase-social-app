@@ -1,13 +1,8 @@
-import { join, dirname } from 'path'
-import { fileURLToPath } from 'url'
 import { createClient } from '@supabase/supabase-js'
-import serializeUser from '../utils/serializeUser.js'
+import serializeUser from './utils/serializeUser.js'
 import { config } from 'dotenv'
 
-const _dirname = dirname(fileURLToPath(import.meta.url))
-config({
-  path: join(_dirname, '../../.env')
-})
+config()
 
 const supabase = createClient(
   process.env.VITE_SUPABASE_URL,

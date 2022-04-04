@@ -76,13 +76,13 @@ const update = async (data) => {
   const user = supabase.auth.user()
   if (!user) return
   try {
-    const { data: user, error } = await supabase
+    const { data: _user, error } = await supabase
       .from('users')
       .update(data)
-      .match({ id: data.id })
+      .match({ id: user.id })
       .single()
     if (error) throw error
-    return user
+    return _user
   } catch (e) {
     throw e
   }
